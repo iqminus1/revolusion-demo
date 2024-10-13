@@ -21,6 +21,7 @@ import java.util.List;
 @Getter
 @ToString
 @Entity(name = "users")
+@Builder
 public class User extends AbsIntEntity implements UserDetails {
     @Column(unique = true)
     private String email;

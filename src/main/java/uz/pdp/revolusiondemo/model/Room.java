@@ -1,12 +1,11 @@
 package uz.pdp.revolusiondemo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import uz.pdp.revolusiondemo.enums.RoomType;
 import uz.pdp.revolusiondemo.model.templates.AbsIntEntity;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +18,9 @@ public class Room extends AbsIntEntity {
     private Hotel hotel;
 
     private boolean busy;
+
+    @ManyToMany
+    private List<Attachment> attachment;
 
     @Enumerated(EnumType.STRING)
     private RoomType type;

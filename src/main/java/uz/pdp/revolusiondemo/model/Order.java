@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @ToString
-@Entity
+@Entity(name = "orders")
 public class Order extends AbsIntEntity {
     @ManyToOne
     private User user;
