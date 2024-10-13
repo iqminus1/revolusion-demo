@@ -10,3 +10,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+app:
+  token:
+    expireDays: 7
+    secretKey: '03d2430e18744da8db2b8dbd64a64977be5c1a7f06d52197c9b8113a3b552c69'
