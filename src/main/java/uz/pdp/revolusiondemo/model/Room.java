@@ -20,7 +20,7 @@ public class Room extends AbsIntEntity {
     private boolean busy;
 
     @ManyToMany
-    private List<Attachment> attachment;
+    private List<Attachment> attachments;
 
     @Enumerated(EnumType.STRING)
     private RoomType type;

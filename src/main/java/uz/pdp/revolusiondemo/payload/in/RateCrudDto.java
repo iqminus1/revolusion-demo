@@ -1,6 +1,7 @@
 package uz.pdp.revolusiondemo.payload.in;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +15,8 @@ public class RateCrudDto {
     private Integer roomId;
 
     @NotNull
+    @Min(1)
+    @Max(5)
     private Integer number;
 
     private String description;
