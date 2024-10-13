@@ -1,23 +1,20 @@
 package uz.pdp.revolusiondemo.service.impl;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.revolusiondemo.mapper.DefaultMapper;
 import uz.pdp.revolusiondemo.model.Attachment;
 import uz.pdp.revolusiondemo.payload.ApiResultDto;
-import uz.pdp.revolusiondemo.payload.AttachmentDTO;
+import uz.pdp.revolusiondemo.payload.AttachmentDto;
 import uz.pdp.revolusiondemo.repository.AttachmentRepository;
 import uz.pdp.revolusiondemo.service.AttachmentService;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -42,52 +39,26 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public ApiResultDto<?> create(HttpServletRequest req) {
-        try {
-            List<AttachmentDTO> result = req.getParts().stream()
-                    .map(part -> createOrUpdate(new Attachment(), part, false))
-                    .toList();
-            return ApiResultDto.success(result);
-        } catch (IOException | ServletException e) {
-            throw new RuntimeException(e);
-        }
+    public ApiResultDto<?> create(MultipartFile part) {
+        return ApiResultDto.success(createOrUpdate(new Attachment(), part));
     }
 
     @Override
-    public ApiResultDto<?> update(HttpServletRequest req, Integer id) {
-        try {
-            Attachment attachment = attachmentRepository.getById(id);
-            List<AttachmentDTO> result = req.getParts().stream()
-                    .map(part -> createOrUpdate(attachment, part, true)).toList();
-            return ApiResultDto.success(result);
-        } catch (IOException | ServletException e) {
-            throw new RuntimeException(e);
-        }
+    public ApiResultDto<?> update(MultipartFile part, Integer id) {
+        Attachment attachment = attachmentRepository.getById(id);
+        return ApiResultDto.success(createOrUpdate(attachment, part));
+
     }
 
     @Override
     public void delete(Integer id) {
-        Attachment attachment = attachmentRepository.getById(id);
-        attachmentRepository.delete(attachment);
+        attachmentRepository.deleteById(id);
     }
 
-    private AttachmentDTO createOrUpdate(Attachment attachment, Part part, boolean isUpdate) {
-        if (isUpdate) {
-            Attachment copyAttachment = new Attachment(
-                    attachment.getName(),
-                    attachment.getOriginalName(),
-                    attachment.getPath(),
-                    attachment.getContentType(),
-                    attachment.getSize()
-            );
-            copyAttachment.setDeleted(true);
-            attachmentRepository.save(copyAttachment);
-
-        }
+    private AttachmentDto createOrUpdate(Attachment attachment, MultipartFile part) {
         try {
-
             String contentType = part.getContentType();
-            String originalName = part.getSubmittedFileName();
+            String originalName = part.getOriginalFilename();
             long size = part.getSize();
 
             String[] split = originalName.split("\\.");

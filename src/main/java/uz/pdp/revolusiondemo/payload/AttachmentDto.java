@@ -10,7 +10,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class AttachmentDTO implements Serializable {
+public class AttachmentDto implements Serializable {
     private Integer id;
     private boolean deleted;
     private String name;
