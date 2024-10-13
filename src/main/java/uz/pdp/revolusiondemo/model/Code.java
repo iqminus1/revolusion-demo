@@ -1,7 +1,6 @@
 package uz.pdp.revolusiondemo.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 import uz.pdp.revolusiondemo.model.templates.AbsIntEntity;
 
@@ -12,10 +11,11 @@ import uz.pdp.revolusiondemo.model.templates.AbsIntEntity;
 @ToString
 @Entity
 public class Code extends AbsIntEntity {
-    @ManyToOne
-    private User user;
+    private String email;
 
     private String code;
 
     private Integer attempt;
+
+    private long expireAt;
 }

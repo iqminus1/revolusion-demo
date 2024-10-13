@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import uz.pdp.revolusiondemo.enums.RoomType;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -15,6 +17,8 @@ public class RoomCrudDto {
 
     @NotNull
     private RoomType type;
+
+    private List<Integer> attachmentIds;
 
     @NotNull
     private Integer number;

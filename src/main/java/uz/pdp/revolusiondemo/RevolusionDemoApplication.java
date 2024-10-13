@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import java.util.Random;
 
 @SpringBootApplication
-@EnableCaching
+//@EnableCaching
 public class RevolusionDemoApplication {
 
     public static void main(String[] args) {
