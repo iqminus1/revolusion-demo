@@ -25,12 +25,16 @@ public class User extends AbsIntEntity implements UserDetails {
     @Column(unique = true)
     private String email;
 
+    private String name;
+
     private String password;
 
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
 
     private boolean enable;
+
+    private Double balance;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

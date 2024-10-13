@@ -1,6 +1,7 @@
-package uz.pdp.revolusiondemo.payload;
+package uz.pdp.revolusiondemo.payload.in;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,16 +9,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class SignUpDto {
-    @NotBlank
-    private String email;
-
+public class HotelCrudDto {
     @NotBlank
     private String name;
 
     @NotBlank
-    private String password;
+    private String phoneNumber;
 
-    @NotBlank
-    private String confirmPassword;
+    @NotNull
+    private Double latitude;
+
+    @NotNull
+    private Double longitude;
 }
