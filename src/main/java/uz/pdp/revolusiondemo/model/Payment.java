@@ -3,6 +3,7 @@ package uz.pdp.revolusiondemo.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import lombok.*;
+import uz.pdp.revolusiondemo.enums.PaymentStatus;
 import uz.pdp.revolusiondemo.model.templates.AbsIntEntity;
 
 @AllArgsConstructor
@@ -16,4 +17,6 @@ public class Payment extends AbsIntEntity {
     private Order order;
 
     private Double amount;
+
+    private PaymentStatus status;
 }

@@ -60,7 +60,8 @@ public class RoomServiceImpl implements RoomService {
     private void updateEntity(Room room, RoomCrudDto crudDto) {
         defaultMapper.updateEntity(room, crudDto);
         room.setHotel(hotelRepository.findById(crudDto.getHotelId()).orElseThrow());
-        room.setAttachments(attachmentRepository.findAllById(crudDto.getAttachmentIds()));
+        if (crudDto.getAttachmentIds() != null)
+            room.setAttachments(attachmentRepository.findAllById(crudDto.getAttachmentIds()));
     }
 
     private RoomDto toDTO(Room room) {

@@ -17,8 +17,6 @@ public class Room extends AbsIntEntity {
     @ManyToOne
     private Hotel hotel;
 
-    private boolean busy;
-
     @ManyToMany
     private List<Attachment> attachments;
 
