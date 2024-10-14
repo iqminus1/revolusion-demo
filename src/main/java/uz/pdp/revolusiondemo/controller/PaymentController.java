@@ -6,25 +6,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.revolusiondemo.enums.OrderStatus;
-import uz.pdp.revolusiondemo.payload.in.OrderCrudDto;
-import uz.pdp.revolusiondemo.service.OrderService;
+import uz.pdp.revolusiondemo.service.PaymentService;
 
 import java.io.ByteArrayOutputStream;
 
-@RestController
 @RequiredArgsConstructor
-@RequestMapping("/order")
-public class OrderController {
-    private final OrderService orderService;
-    @GetMapping("/orders/excel")
+@RestController
+@RequestMapping("/payment")
+public class PaymentController {
+    private final PaymentService paymentService;
+
+    @GetMapping("/payments/excel")
     public ResponseEntity<byte[]> exportUsersToExcel() {
-        ByteArrayOutputStream outputStream = orderService.exportOrdersToExcel();
+        ByteArrayOutputStream outputStream = paymentService.exportPaymentsToExcel();
 
         byte[] bytes = outputStream.toByteArray();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=orders.xlsx");
+        headers.add("Content-Disposition", "attachment; filename=payments.xlsx");
 
         return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
@@ -32,27 +31,29 @@ public class OrderController {
     @GetMapping("/read-all")
     @PreAuthorize("hasAuthority(T(uz.pdp.revolusiondemo.enums.RoleEnum).ADMIN.name())")
     public ResponseEntity<?> readAll(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.ok(orderService.readAll(page, size));
+        return ResponseEntity.ok(paymentService.readAll(page, size));
     }
 
     @GetMapping("/read/{id}")
     @PreAuthorize("hasAuthority(T(uz.pdp.revolusiondemo.enums.RoleEnum).ADMIN.name())")
     public ResponseEntity<?> read(@PathVariable Integer id) {
-        return ResponseEntity.ok(orderService.read(id));
+        return ResponseEntity.ok(paymentService.read(id));
     }
 
-    @GetMapping("/read-my-orders")
+    @GetMapping("/read-my-payments")
     public ResponseEntity<?> readMyOrders() {
-        return ResponseEntity.ok(orderService.readMyOrders());
+        return ResponseEntity.ok(paymentService.myPayments());
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody OrderCrudDto crudDto) {
-        return ResponseEntity.ok(orderService.create(crudDto));
+    @PutMapping("/pay-with-balance/{paymentId}")
+    public ResponseEntity<?> payWithBalance(@PathVariable Integer paymentId) {
+        return ResponseEntity.ok(paymentService.payWithBalance(paymentId));
     }
 
-    @PutMapping("/change-status/{id}")
-    public ResponseEntity<?> changeStatus(@RequestParam OrderStatus orderStatus, @PathVariable Integer id) {
-        return ResponseEntity.ok((orderService.changeStatus(orderStatus, id)));
+    @PutMapping("/user-paid/{paymentId}")
+    @PreAuthorize("hasAuthority(T(uz.pdp.revolusiondemo.enums.RoleEnum).ADMIN.name())")
+    public ResponseEntity<?> userPaid(@PathVariable Integer paymentId) {
+        return ResponseEntity.ok(paymentService.userPaid(paymentId));
     }
+
 }

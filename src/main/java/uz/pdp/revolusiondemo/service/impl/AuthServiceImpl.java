@@ -1,6 +1,11 @@
 package uz.pdp.revolusiondemo.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +27,9 @@ import uz.pdp.revolusiondemo.security.JwtProvider;
 import uz.pdp.revolusiondemo.service.AuthService;
 import uz.pdp.revolusiondemo.service.MailService;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -159,6 +167,42 @@ public class AuthServiceImpl implements AuthService {
 
         return ApiResultDto.success("Ok");
     }
+
+    @Override
+    public ByteArrayOutputStream exportUsersToExcel() {
+        List<User> users = userRepository.findAll();
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Users");
+
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {"Id", "Email", "Name", "Role", "Balance"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+
+        for (int i = 0; i < users.size(); i++) {
+            Row row = sheet.createRow(i + 1);
+            User user = users.get(i);
+            row.createCell(0).setCellValue(user.getId());
+            row.createCell(1).setCellValue(user.getEmail());
+            row.createCell(2).setCellValue(user.getName());
+            row.createCell(3).setCellValue(user.getRole().name());
+            row.createCell(4).setCellValue(user.getBalance() != null ? user.getBalance() : 0.0);
+        }
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            workbook.write(outputStream);
+            workbook.close();
+            return outputStream;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
 
     private String getCode() {
         StringBuilder sb = new StringBuilder();

@@ -4,6 +4,8 @@ import uz.pdp.revolusiondemo.enums.OrderStatus;
 import uz.pdp.revolusiondemo.payload.ApiResultDto;
 import uz.pdp.revolusiondemo.payload.in.OrderCrudDto;
 
+import java.io.ByteArrayOutputStream;
+
 public interface OrderService {
     ApiResultDto<?> readAll(int page,int size);
 
@@ -14,4 +16,5 @@ public interface OrderService {
     ApiResultDto<?> create(OrderCrudDto crudDto);
 
     ApiResultDto<?> changeStatus(OrderStatus status, Integer id);
+    ByteArrayOutputStream exportOrdersToExcel();
 }
