@@ -26,3 +26,8 @@ app:
 
   attachment:
     base-path: C:\Users\User\Desktop\projects\revolusion-demo\files
+
+  user:
+    email: iqminus7@gmail.com
+    name: Abdulaziz
+    password: 123

@@ -1,6 +1,11 @@
 package uz.pdp.revolusiondemo.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import uz.pdp.revolusiondemo.mapper.DefaultMapper;
@@ -14,6 +19,8 @@ import uz.pdp.revolusiondemo.repository.HotelRepository;
 import uz.pdp.revolusiondemo.repository.RoomRepository;
 import uz.pdp.revolusiondemo.service.RoomService;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -55,6 +62,40 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void delete(Integer id) {
         roomRepository.deleteById(id);
+    }
+
+    @Override
+    public ByteArrayOutputStream exportRoomsToExcel() {
+        List<Room> rooms = roomRepository.findAll();
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Rooms");
+
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {"Id", "Hotel id", "Attachment ids", "Type", "Number", "Price"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+
+        for (int i = 0; i < rooms.size(); i++) {
+            Row row = sheet.createRow(i + 1);
+            Room room = rooms.get(i);
+            row.createCell(0).setCellValue(room.getId());
+            row.createCell(1).setCellValue(room.getHotel().getId());
+            row.createCell(2).setCellValue(room.getAttachments().stream().map(Attachment::getId).toList().toString());
+            row.createCell(3).setCellValue(room.getType().name());
+            row.createCell(4).setCellValue(room.getNumber());
+            row.createCell(5).setCellValue(room.getPrice());
+        }
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            workbook.write(outputStream);
+            workbook.close();
+            return outputStream;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void updateEntity(Room room, RoomCrudDto crudDto) {
